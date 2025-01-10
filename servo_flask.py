@@ -6,8 +6,8 @@ import time
 app = Flask(__name__)
 
 # Setup the GPIO pin for the servo
-servo_pin = 13
-GPIO.setmode(GPIO.BCM)
+servo_pin = 3
+GPIO.setmode(GPIO.BOARD)
 GPIO.setup(servo_pin, GPIO.OUT)
 
 # Setup PWM process
