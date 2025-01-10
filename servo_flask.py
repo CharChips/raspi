@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import RPi.GPIO as GPIO
 import time
 
@@ -25,11 +25,14 @@ def home():
 def rotate():
     global duty_cycle
 
-    # Check the action
-    action = request.form.get("action")
-    if action == "increment" and duty_cycle < 12:
+    # Parse JSON data
+    data = request.json
+    action = data.get("action")
+
+    # Adjust duty cycle based on action
+    if action == "left" and duty_cycle < 12:
         duty_cycle += 1
-    elif action == "decrement" and duty_cycle > 2:
+    elif action == "right" and duty_cycle > 2:
         duty_cycle -= 1
 
     # Change the servo's duty cycle
@@ -37,7 +40,8 @@ def rotate():
     time.sleep(0.5)  # Allow time for the servo to move
     pwm.ChangeDutyCycle(0)  # Stop PWM signal to prevent jitter
 
-    return render_template("index.html", duty_cycle=duty_cycle)
+    # Respond with updated duty cycle
+    return jsonify({"duty_cycle": duty_cycle})
 
 
 @app.route("/cleanup", methods=["POST"])
