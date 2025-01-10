@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servo and Security Camera Dashboard</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #0a0a23;
+            color: white;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 20%;
+            background-color: #7b5ca5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+        }
+        .sidebar button {
+            background-color: #4a3c8c;
+            color: white;
+            border: none;
+            margin: 10px 0;
+            padding: 15px;
+            font-size: 16px;
+            width: 90%;
+            cursor: pointer;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .sidebar button:hover {
+            background-color: #5f4aa1;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Servo Control Styles */
+        .servo-control {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .servo-control form {
+            margin-top: 20px;
+        }
+
+        /* Security Camera Styles */
+        #camera-feed {
+            width: 80%;
+            height: 400px;
+            border: 5px solid #8a5fc7;
+            background-color: white;
+            box-shadow: 0 0 20px #8a5fc7, 0 0 40px #8a5fc7, 0 0 60px #8a5fc7;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        #camera-feed:hover {
+            box-shadow: 0 0 30px #8a5fc7, 0 0 60px #8a5fc7, 0 0 80px #8a5fc7;
+        }
+
+        select, input, button {
+            margin: 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        .controls, .playback {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <button id="servo-control">Servo Control</button>
+        <button id="security-camera">Security Camera</button>
+        <button id="exit">Exit</button>
+    </div>
+
+    <div class="main-content">
+        <!-- Servo Control Section -->
+        <div id="servo-control-section" class="servo-control" style="display: none;">
+            <h1>Servo Motor Control</h1>
+            <p>Current Duty Cycle: {{ duty_cycle }}</p>
+            <form method="post" action="/rotate">
+                <button type="submit" name="action" value="increment">Increment</button>
+                <button type="submit" name="action" value="decrement">Decrement</button>
+            </form>
+            <br>
+            <form method="post" action="/cleanup">
+                <button type="submit">Cleanup GPIO</button>
+            </form>
+        </div>
+
+        <!-- Security Camera Section -->
+        <div id="security-camera-section" style="display: none;">
+            <h1>Security Camera Dashboard</h1>
+            <video id="camera-feed" autoplay></video>
+
+            <!-- Camera Mode -->
+            <div id="camera-mode-options" class="controls" style="display:none;">
+                <h2>Camera Modes</h2>
+                <select id="camera-mode-select">
+                    <option value="basic">Basic Surveillance Mode</option>
+                    <option value="ultra-safe">Ultra Safe Mode</option>
+                </select>
+                <button onclick="switchCameraMode()">Apply Mode</button>
+            </div>
+
+            <!-- Live Feed Control -->
+            <div id="live-feed-options" class="controls" style="display:none;">
+                <h2>Live Feed Control</h2>
+                <select id="live-feed-select">
+                    <option value="zoom-in">Zoom In</option>
+                    <option value="zoom-out">Zoom Out</option>
+                    <option value="snapshot">Take Snapshot</option>
+                </select>
+                <button onclick="controlLiveFeed()">Execute</button>
+            </div>
+
+            <!-- Playback Mode -->
+            <div id="playback-options" class="playback" style="display:none;">
+                <h2>Playback Mode</h2>
+                <label>Select Date & Time Range:</label>
+                <input type="datetime-local" id="start-time">
+                <input type="datetime-local" id="end-time">
+                <button onclick="playback()">Search</button>
+                <button onclick="exportClip()">Export Video Clip</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle Visibility Logic
+        document.getElementById("servo-control").addEventListener("click", () => toggleSection("servo-control-section"));
+        document.getElementById("security-camera").addEventListener("click", () => toggleSection("security-camera-section"));
+        document.getElementById("exit").addEventListener("click", () => {
+            if (confirm("Are you sure you want to exit?")) {
+                window.close(); // Attempt to close the window
+            }
+        });
+
+        function toggleSection(sectionId) {
+            document.getElementById("servo-control-section").style.display = "none";
+            document.getElementById("security-camera-section").style.display = "none";
+            document.getElementById(sectionId).style.display = "block";
+        }
+
+        // Additional camera logic here (zoom, snapshot, playback, etc.)
+    </script>
+</body>
+</html>
