@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servo Control</title>
+</head>
+<body>
+    <h1>Servo Motor Control</h1>
+    <p>Current Duty Cycle: {{ duty_cycle }}</p>
+    <form method="post" action="/rotate">
+        <button type="submit" name="action" value="increment">Increment</button>
+        <button type="submit" name="action" value="decrement">Decrement</button>
+    </form>
+    <br>
+    <form method="post" action="/cleanup">
+        <button type="submit">Cleanup GPIO</button>
+    </form>
+</body>
+</html>
